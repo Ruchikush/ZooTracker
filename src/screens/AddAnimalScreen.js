@@ -193,8 +193,16 @@ export default function AddAnimalScreen({navigation}) {
           </View>
         )}
       />
-      <Button title="Add Image" onPress={handleAddImage} />
-      <Button title="Add Animal" onPress={handleAddAnimal} />
+      {/* <Button title="Add Image" onPress={handleAddImage} />
+      <Button title="Add Animal" onPress={handleAddAnimal} /> */}
+
+      <TouchableOpacity style={styles.button1} onPress={handleAddImage}>
+        <Text style={styles.buttonText}>Add Image</Text>
+      </TouchableOpacity>
+      {/* <Button title="Save Changes" color="#4CAF50" onPress={handleEditAnimal} /> */}
+      <TouchableOpacity style={styles.button} onPress={handleAddAnimal}>
+        <Text style={styles.buttonText}>Add Animal</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -204,6 +212,37 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
+  },
+  button1: {
+    backgroundColor: '#1e90ff', // Green background
+    padding: 12, // Padding inside the button
+    borderRadius: 8, // Rounded corners
+    alignItems: 'center', // Center the text horizontally
+    justifyContent: 'center', // Center the text vertically
+    shadowColor: '#000', // Shadow color
+    shadowOffset: {width: 0, height: 2}, // Shadow offset
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 3.84, // Shadow radius
+    elevation: 5, // For Android shadow
+    marginTop: 10,
+  },
+  button: {
+    backgroundColor: '#4CAF50', // Green background
+    padding: 12, // Padding inside the button
+    borderRadius: 8, // Rounded corners
+    alignItems: 'center', // Center the text horizontally
+    justifyContent: 'center', // Center the text vertically
+    shadowColor: '#000', // Shadow color
+    shadowOffset: {width: 0, height: 2}, // Shadow offset
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 3.84, // Shadow radius
+    elevation: 5, // For Android shadow
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff', // White text
+    fontSize: 16, // Font size
+    fontWeight: 'bold', // Bold text
   },
   input: {
     borderWidth: 1,
