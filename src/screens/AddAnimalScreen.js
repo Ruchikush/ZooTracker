@@ -1,105 +1,4 @@
-// import React, {useState} from 'react';
-// import {
-//   View,
-//   TextInput,
-//   Button,
-//   Image,
-//   StyleSheet,
-//   ScrollView,
-// } from 'react-native';
-// import {useDispatch} from 'react-redux';
-// import {addAnimal} from '../redux/animalSlice';
-// import {nanoid} from '@reduxjs/toolkit';
-// import * as ImagePicker from 'react-native-image-picker';
-
-// export default function AddAnimalScreen({navigation}) {
-//   const [name, setName] = useState('');
-//   const [breed, setBreed] = useState('');
-//   const [description, setDescription] = useState('');
-//   const [images, setImages] = useState([]);
-//   const dispatch = useDispatch();
-
-//   const handleAddAnimal = () => {
-//     if (name && breed && description && images.length > 0) {
-//       dispatch(
-//         addAnimal({
-//           id: nanoid(),
-//           name,
-//           breed,
-//           description,
-//           images,
-//         }),
-//       );
-//       navigation.goBack();
-//     } else {
-//       alert('Please fill in all fields and add at least one image.');
-//     }
-//   };
-
-//   const handlePickImage = () => {
-//     ImagePicker.launchImageLibrary(
-//       {mediaType: 'photo', selectionLimit: 0},
-//       response => {
-//         if (response.assets) {
-//           setImages([...images, ...response.assets.map(asset => asset.uri)]);
-//         }
-//       },
-//     );
-//   };
-
-//   return (
-//     <ScrollView contentContainerStyle={styles.container}>
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Animal Name"
-//         value={name}
-//         onChangeText={setName}
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Breed"
-//         value={breed}
-//         onChangeText={setBreed}
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Description"
-//         value={description}
-//         onChangeText={setDescription}
-//         multiline
-//       />
-//       <Button title="Pick Images" onPress={handlePickImage} />
-//       <ScrollView horizontal>
-//         {images.map((uri, index) => (
-//           <Image key={index} source={{uri}} style={styles.image} />
-//         ))}
-//       </ScrollView>
-//       <Button title="Add Animal" onPress={handleAddAnimal} />
-//     </ScrollView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 16,
-//     backgroundColor: '#fff',
-//   },
-//   input: {
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     padding: 8,
-//     marginVertical: 8,
-//     borderRadius: 4,
-//   },
-//   image: {
-//     width: 100,
-//     height: 100,
-//     marginRight: 8,
-//   },
-// });
-
-import React, {useState} from 'react';
+import React, {useState} from 'react'; // Import React and useState hook for state management
 import {
   View,
   TextInput,
@@ -109,43 +8,47 @@ import {
   Image,
   TouchableOpacity,
   Text,
-} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {addAnimal} from '../redux/animalSlice';
-import {launchImageLibrary} from 'react-native-image-picker';
+} from 'react-native'; // Import React Native components
+import {useDispatch} from 'react-redux'; // Import useDispatch hook to dispatch actions
+import {addAnimal} from '../redux/animalSlice'; // Import addAnimal action to dispatch
+import {launchImageLibrary} from 'react-native-image-picker'; // Import image picker for selecting images
 
 export default function AddAnimalScreen({navigation}) {
-  const [name, setName] = useState('');
-  const [breed, setBreed] = useState('');
-  const [description, setDescription] = useState('');
-  const [images, setImages] = useState([]); // Store selected images
+  const [name, setName] = useState(''); // State to store animal name
+  const [breed, setBreed] = useState(''); // State to store animal breed
+  const [description, setDescription] = useState(''); // State to store animal description
+  const [images, setImages] = useState([]); // State to store selected images
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); // Initialize useDispatch to dispatch actions
 
-  // Handle image selection
+  // Function to handle image selection from the gallery
   const handleAddImage = async () => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
-      selectionLimit: 0, // Allow multiple images
+      selectionLimit: 0, // Allow multiple images to be selected
     });
 
     if (result.assets) {
-      setImages([...images, ...result.assets.map(asset => asset.uri)]);
+      setImages([...images, ...result.assets.map(asset => asset.uri)]); // Add selected images to the state
     }
   };
 
-  // Handle removing an image
+  // Function to remove an image from the list
   const handleRemoveImage = index => {
-    const updatedImages = images.filter((_, idx) => idx !== index);
-    setImages(updatedImages);
+    const updatedImages = images.filter((_, idx) => idx !== index); // Remove image at the specified index
+    setImages(updatedImages); // Update the images state
   };
 
-  // Handle adding a new animal
+  // Function to handle adding the new animal
   const handleAddAnimal = () => {
-    if (name && breed && description) {
+    if (!name || !breed || !description) {
+      alert('Please fill in all fields.'); // Alert if any field is missing
+    } else if (images.length === 0) {
+      alert('Please add at least one image.'); // Alert if no image is selected
+    } else {
       dispatch(
         addAnimal({
-          id: Date.now().toString(),
+          id: Date.now().toString(), // Generate a unique ID for the animal
           name,
           breed,
           description,
@@ -153,60 +56,63 @@ export default function AddAnimalScreen({navigation}) {
         }),
       );
       navigation.goBack(); // Navigate back to the AnimalListScreen
-    } else {
-      alert('Please fill in all fields.');
     }
   };
-
   return (
     <View style={styles.container}>
+      {/* Input fields for animal details */}
       <TextInput
         style={styles.input}
         placeholder="Animal Name"
         value={name}
-        onChangeText={setName}
+        onChangeText={setName} // Update name state on change
       />
       <TextInput
         style={styles.input}
         placeholder="Breed"
         value={breed}
-        onChangeText={setBreed}
+        onChangeText={setBreed} // Update breed state on change
       />
       <TextInput
         style={styles.input}
         placeholder="Description"
         value={description}
-        onChangeText={setDescription}
+        onChangeText={setDescription} // Update description state on change
       />
+      {/* FlatList to display selected images */}
       <FlatList
         data={images}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => index.toString()} // Set key for each image
         horizontal
         renderItem={({item, index}) => (
           <View style={styles.imageContainer}>
             <Image source={{uri: item}} style={styles.image} />
+            {/* Display image */}
             <TouchableOpacity
               style={styles.removeButton}
-              onPress={() => handleRemoveImage(index)}>
+              onPress={() => handleRemoveImage(index)} // Remove image on press
+            >
               <Text style={styles.removeButtonText}>X</Text>
+              {/* Remove button */}
             </TouchableOpacity>
           </View>
         )}
       />
-      {/* <Button title="Add Image" onPress={handleAddImage} />
-      <Button title="Add Animal" onPress={handleAddAnimal} /> */}
-
+      {/* Buttons for adding image and submitting the form */}
       <TouchableOpacity style={styles.button1} onPress={handleAddImage}>
         <Text style={styles.buttonText}>Add Image</Text>
+        {/* Button to add image */}
       </TouchableOpacity>
-      {/* <Button title="Save Changes" color="#4CAF50" onPress={handleEditAnimal} /> */}
+
       <TouchableOpacity style={styles.button} onPress={handleAddAnimal}>
         <Text style={styles.buttonText}>Add Animal</Text>
+        {/* Button to add animal */}
       </TouchableOpacity>
     </View>
   );
 }
 
+// Styles for the components
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -214,35 +120,35 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   button1: {
-    backgroundColor: '#1e90ff', // Green background
-    padding: 12, // Padding inside the button
-    borderRadius: 8, // Rounded corners
-    alignItems: 'center', // Center the text horizontally
-    justifyContent: 'center', // Center the text vertically
-    shadowColor: '#000', // Shadow color
-    shadowOffset: {width: 0, height: 2}, // Shadow offset
-    shadowOpacity: 0.25, // Shadow opacity
-    shadowRadius: 3.84, // Shadow radius
-    elevation: 5, // For Android shadow
+    backgroundColor: '#1e90ff', // Style for the add image button
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
     marginTop: 10,
   },
   button: {
-    backgroundColor: '#4CAF50', // Green background
-    padding: 12, // Padding inside the button
-    borderRadius: 8, // Rounded corners
-    alignItems: 'center', // Center the text horizontally
-    justifyContent: 'center', // Center the text vertically
-    shadowColor: '#000', // Shadow color
-    shadowOffset: {width: 0, height: 2}, // Shadow offset
-    shadowOpacity: 0.25, // Shadow opacity
-    shadowRadius: 3.84, // Shadow radius
-    elevation: 5, // For Android shadow
+    backgroundColor: '#4CAF50', // Style for the add animal button
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
     marginTop: 10,
   },
   buttonText: {
-    color: '#fff', // White text
-    fontSize: 16, // Font size
-    fontWeight: 'bold', // Bold text
+    color: '#fff', // White text for buttons
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   input: {
     borderWidth: 1,
